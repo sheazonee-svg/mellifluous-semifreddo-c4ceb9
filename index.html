@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#19171b">
+<title>Yoonieversea — FX Library</title>
+<style>
+:root{--bg:#19171b;--panel:#241f24;--red:#75020f;--red2:#51080d;--deep:#2b0307;--text:#f5eeee;--muted:#b8aeb2;--line:#49343a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+button,a{font:inherit}button{cursor:pointer}
+.topbar{height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,6vw,88px);border-bottom:1px solid #ffffff12;background:#19171bf2;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.brand{font-family:Georgia,serif;letter-spacing:3px;font-size:17px}.brand span{color:#c34a58}
+.nav{display:flex;gap:10px}.nav button,.pill{border:0;color:var(--text);background:transparent;padding:10px 16px;border-radius:30px;font-size:12px;letter-spacing:1px}
+.nav button.active,.nav button:hover,.pill.red{background:var(--red);box-shadow:0 5px 20px #75020f55}
+main{max-width:1100px;margin:auto;padding:54px 24px 80px}
+.page{display:none}.page.active{display:block}
+.hero{min-height:420px;display:flex;align-items:center;justify-content:center;text-align:center;flex-direction:column;padding:35px 15px;position:relative;overflow:hidden}
+.hero:before,.hero:after{content:"";position:absolute;border:1px solid #75020f55;border-radius:50%;width:330px;height:330px;z-index:-1}
+.hero:before{left:-220px;top:30px;box-shadow:0 0 0 35px #75020f0b,0 0 0 75px #75020f08}.hero:after{right:-230px;bottom:-130px;box-shadow:0 0 0 35px #75020f0b,0 0 0 75px #75020f08}
+.avatar{width:116px;height:116px;border-radius:50%;border:4px solid var(--red);background:linear-gradient(145deg,#75020f,#2b0307);display:grid;place-items:center;overflow:hidden;margin-bottom:22px;box-shadow:0 0 35px #75020f55}
+.avatar img{width:100%;height:100%;object-fit:cover}.avatar .initial{font:48px Georgia,serif;color:#fff}
+.eyebrow{font-size:10px;letter-spacing:5px;color:#c65b66;text-transform:uppercase;margin:0 0 12px}
+h1,h2,h3,p{margin-top:0}h1{font:clamp(38px,7vw,66px) Georgia,serif;letter-spacing:3px;margin-bottom:12px}h1 em{font-style:normal;color:#bd4552}
+.intro{max-width:480px;color:var(--muted);line-height:1.7;font-size:14px;margin:0 auto 30px}
+.links{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.action{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;background:var(--red);border:1px solid #a32a37;padding:14px 21px;border-radius:7px;font-size:11px;letter-spacing:1.2px;transition:.2s;min-width:155px}
+.action:hover{background:#9b1020;transform:translateY(-2px);box-shadow:0 9px 25px #75020f44}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:26px;border-bottom:1px solid var(--line);padding-bottom:17px}
+.section-head h2{font:36px Georgia,serif;margin:0}.section-head p{color:var(--muted);font-size:12px;margin:7px 0 0}
+.back{background:none;border:1px solid var(--line);color:var(--muted);border-radius:25px;padding:9px 15px;font-size:11px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:15px}
+.card{background:linear-gradient(145deg,#30262c,#211c21);border:1px solid #ffffff12;border-radius:12px;padding:19px;text-align:left;color:var(--text);min-height:112px;transition:.2s;position:relative}
+.card:hover{border-color:#9b2938;transform:translateY(-3px);background:linear-gradient(145deg,#44232c,#241c22)}
+.card .tag{font-size:9px;letter-spacing:2px;color:#cf6873;text-transform:uppercase;display:block;margin-bottom:13px}
+.card strong{font:22px Georgia,serif;display:block}.card small{display:block;color:var(--muted);font-size:11px;margin-top:8px}
+.empty{padding:35px;border:1px dashed #69404a;border-radius:12px;text-align:center;color:var(--muted);line-height:1.7;font-size:13px;grid-column:1/-1}
+.track-title{font:clamp(32px,6vw,48px) Georgia,serif;margin-bottom:8px}.track-sub{color:var(--muted);font-size:12px;margin-bottom:28px}
+.fx-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;background:var(--panel);border:1px solid #ffffff12;border-radius:9px;margin-bottom:11px}
+.fx-row strong{font-size:13px;letter-spacing:1px}.fx-row span{font-size:10px;color:var(--muted);display:block;margin-top:5px}
+.fx-row a{background:var(--red);color:white;text-decoration:none;padding:11px 16px;border-radius:6px;font-size:10px;letter-spacing:1px;white-space:nowrap}
+.footer{text-align:center;color:#776d72;font-size:10px;letter-spacing:2px;padding:25px;border-top:1px solid #ffffff10}
+.edit-trigger{position:fixed;left:18px;bottom:18px;background:#2b0307;border:1px solid #87303b;color:#e8cdd0;padding:11px 15px;border-radius:30px;font-size:10px;letter-spacing:1px;z-index:9}
+.modal{display:none;position:fixed;inset:0;background:#090709df;z-index:20;overflow:auto;padding:25px 12px}.modal.show{display:block}
+.modal-box{max-width:620px;margin:35px auto;background:#211b20;border:1px solid #6a303a;border-radius:14px;padding:25px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.modal-head h2{font:27px Georgia,serif;margin:0}
+.close{border:0;background:none;color:white;font-size:25px}
+label{display:block;font-size:10px;letter-spacing:1px;color:#c9aeb2;margin:15px 0 7px}
+input,textarea{width:100%;background:#151216;border:1px solid #51323a;border-radius:7px;padding:12px;color:white;outline:none}
+input:focus,textarea:focus{border-color:#b33a49}textarea{min-height:70px;resize:vertical}
+.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.form-actions button{border:0;border-radius:7px;padding:12px 16px;background:var(--red);color:white;font-size:11px}.form-actions .secondary{background:#41353c}
+.admin-list{margin-top:25px;border-top:1px solid var(--line);padding-top:15px}.admin-item{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #ffffff10;font-size:12px}.admin-item button{background:#493039;color:#fff;border:0;padding:7px 10px;border-radius:5px;font-size:10px}
+.note{font-size:11px;color:#a99ba0;line-height:1.6;margin-top:14px}
+@media(max-width:600px){.topbar{height:62px;padding:0 16px}.brand{font-size:13px}.nav{gap:0}.nav button{padding:9px 10px;font-size:10px}main{padding:30px 17px 60px}.hero{min-height:390px}.section-head h2{font-size:29px}.fx-row{padding:15px}.fx-row a{padding:10px 12px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">YOONIEVERSEA<span>.</span></div>
+  <nav class="nav">
+    <button id="homeNav" class="active" onclick="showPage('home')">HOME</button>
+    <button id="fxNav" onclick="showPage('library')">FX BANDLAB</button>
+  </nav>
+</header>
+
+<main>
+  <section id="home" class="page active">
+    <div class="hero">
+      <div class="avatar" id="avatar"><span class="initial">Y</span></div>
+      <p class="eyebrow">PERSONAL FX LIBRARY</p>
+      <h1>yoon<em>ieversea</em></h1>
+      <p class="intro" id="description">A little archive of vocal FX made with love. Find your favorite sound and explore the collection.</p>
+      <div class="links" id="homeLinks">
+        <a class="action" id="waLink" href="#" target="_blank" rel="noopener">WHATSAPP CHANNEL ↗</a>
+        <button class="action" onclick="showPage('library')">FX BANDLAB ↗</button>
+        <a class="action" id="tiktokLink" href="#" target="_blank" rel="noopener">TIKTOK ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="library" class="page">
+    <div class="section-head"><div><p class="eyebrow">THE COLLECTION</p><h2>FX BandLab</h2><p>Choose a collection to explore.</p></div><button class="back" onclick="showPage('home')">← HOME</button></div>
+    <p class="eyebrow">FAV FX</p><div class="grid" id="favorites"></div>
+    <div style="height:32px"></div><p class="eyebrow">FX COLLECTION</p><div class="grid" id="songs"></div>
+  </section>
+
+  <section id="track" class="page">
+    <button class="back" onclick="showPage('library')">← BACK TO FX</button>
+    <div style="height:30px"></div><p class="eyebrow">FX COLLECTION</p><h2 class="track-title" id="trackTitle">TRACK</h2><p class="track-sub">Select the vocal FX you want to open in BandLab.</p>
+    <div id="fxLinks"></div>
+  </section>
+</main>
+
+<div class="footer">MADE FOR THE LOVE OF SOUND · YOONIEVERSEA</div>
+<button class="edit-trigger" onclick="openAdmin()">✦ EDIT WEBSITE</button>
+
+<div class="modal" id="adminModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2>Website editor</h2><button class="close" onclick="closeAdmin()">×</button></div>
+    <p class="note">Edit konten website dari sini. Perubahan disimpan di browser/perangkat ini.</p>
+    <label>FOTO PROFIL (URL GAMBAR)</label><input id="avatarUrl" placeholder="https://...">
+    <label>DESKRIPSI HOMEPAGE</label><textarea id="descInput"></textarea>
+    <label>WHATSAPP CHANNEL LINK</label><input id="waInput" placeholder="https://whatsapp.com/channel/...">
+    <label>TIKTOK LINK</label><input id="tiktokInput" placeholder="https://www.tiktok.com/@...">
+    <div class="form-actions"><button onclick="saveProfile()">SAVE HOMEPAGE</button></div>
+
+    <div class="admin-list">
+      <h3 style="font:20px Georgia,serif">Add / update FX</h3>
+      <label>JUDUL LAGU / NAMA FAVORIT FX</label><input id="songInput" placeholder="Contoh: REDRED">
+      <label>KATEGORI</label>
+      <select id="typeInput" style="width:100%;background:#151216;color:white;border:1px solid #51323a;border-radius:7px;padding:12px">
+        <option value="song">FX Collection (judul lagu)</option><option value="favorite">Fav FX</option>
+      </select>
+      <label>NAMA FX (CONTOH: MAIN VOCAL)</label><input id="fxNameInput" placeholder="MAIN VOCAL">
+      <label>LINK BANDLAB</label><input id="fxUrlInput" placeholder="https://www.bandlab.com/...">
+      <div class="form-actions"><button onclick="addFx()">ADD FX</button><button class="secondary" onclick="clearForm()">CLEAR FORM</button></div>
+      <div id="adminItems"></div>
+    </div>
+    <p class="note">Catatan: ini versi awal tanpa server. Data yang kamu edit tersimpan di browser ini. Agar hasil edit tampil ke semua pengunjung dan bisa diakses dari perangkat lain, website perlu disambungkan ke database dan hosting.</p>
+  </div>
+</div>
+
+<script>
+const starter = {
+  profile: {
+    avatar: '',
+    description: 'A little archive of vocal FX made with love. Find your favorite sound and explore the collection.',
+    wa: '',
+    tiktok: ''
+  },
+  items: []
+};
+
+let data;
+try {
+  data = JSON.parse(localStorage.getItem('yoonieverseaFX')) || starter;
+} catch (e) {
+  data = starter;
+}
+
+function persist() {
+  localStorage.setItem('yoonieverseaFX', JSON.stringify(data));
+  render();
+}
+
+function safe(value) {
+  return String(value || '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
+}
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('homeNav').classList.toggle('active', id === 'home');
+  document.getElementById('fxNav').classList.toggle('active', id !== 'home');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function render() {
+  document.getElementById('description').textContent = data.profile.description || '';
+  const avatar = document.getElementById('avatar');
+  if (data.profile.avatar) {
+    const img = document.createElement('img');
+    img.src = data.profile.avatar;
+    img.alt = 'Profile photo';
+    img.onerror = () => { avatar.innerHTML = '<span class="initial">Y</span>'; };
+    avatar.replaceChildren(img);
+  } else {
+    avatar.innerHTML = '<span class="initial">Y</span>';
+  }
+
+  const wa = document.getElementById('waLink');
+  const tiktok = document.getElementById('tiktokLink');
+  wa.href = data.profile.wa || '#';
+  tiktok.href = data.profile.tiktok || '#';
+  [wa, tiktok].forEach(link => {
+    link.style.opacity = link.getAttribute('href') === '#' ? '.65' : '1';
+  });
+
+  const favorites = data.items.filter(item => item.type === 'favorite');
+  const songs = [...new Set(data.items.filter(item => item.type === 'song').map(item => item.song))];
+
+  document.getElementById('favorites').innerHTML = favorites.length
+    ? favorites.map(item => `<button class="card" onclick="openSingle('${safe(item.id)}')"><span class="tag">FAV FX</span><strong>${safe(item.song)}</strong><small>${safe(item.name)}</small></button>`).join('')
+    : '<div class="empty">Your favorite FX will appear here.<br>Add them through EDIT WEBSITE.</div>';
+
+  document.getElementById('songs').innerHTML = songs.length
+    ? songs.map(song => `<button class="card" onclick="openTrack('${encodeURIComponent(song)}')"><span class="tag">FX COLLECTION</span><strong>${safe(song)}</strong><small>${data.items.filter(item => item.type === 'song' && item.song === song).length} FX available ↗</small></button>`).join('')
+    : '<div class="empty">Belum ada lagu di koleksi.<br>Tambahkan judul lagu dan link FX lewat EDIT WEBSITE.</div>';
+
+  renderAdmin();
+}
+
+function openTrack(encodedSong) {
+  const song = decodeURIComponent(encodedSong);
+  document.getElementById('trackTitle').textContent = song;
+  const items = data.items.filter(item => item.type === 'song' && item.song === song);
+  document.getElementById('fxLinks').innerHTML = items.map(item =>
+    `<div class="fx-row"><div><strong>${safe(item.name)}</strong><span>${safe(song)}</span></div><a href="${safe(item.url)}" target="_blank" rel="noopener">OPEN IN BANDLAB ↗</a></div>`
+  ).join('');
+  showPage('track');
+}
+
+function openSingle(id) {
+  const item = data.items.find(entry => entry.id === id);
+  if (item && item.url) window.open(item.url, '_blank', 'noopener');
+}
+
+function openAdmin() {
+  document.getElementById('avatarUrl').value = data.profile.avatar || '';
+  document.getElementById('descInput').value = data.profile.description || '';
+  document.getElementById('waInput').value = data.profile.wa || '';
+  document.getElementById('tiktokInput').value = data.profile.tiktok || '';
+  renderAdmin();
+  document.getElementById('adminModal').classList.add('show');
+}
+
+function closeAdmin() {
+  document.getElementById('adminModal').classList.remove('show');
+}
+
+function saveProfile() {
+  data.profile = {
+    avatar: document.getElementById('avatarUrl').value.trim(),
+    description: document.getElementById('descInput').value.trim(),
+    wa: document.getElementById('waInput').value.trim(),
+    tiktok: document.getElementById('tiktokInput').value.trim()
+  };
+  persist();
+  alert('Homepage berhasil disimpan!');
+}
+
+function addFx() {
+  const song = document.getElementById('songInput').value.trim();
+  const name = document.getElementById('fxNameInput').value.trim();
+  const url = document.getElementById('fxUrlInput').value.trim();
+  const type = document.getElementById('typeInput').value;
+
+  if (!song || !name || !url) {
+    alert('Isi nama/judul, nama FX, dan link BandLab dulu ya.');
+    return;
+  }
+  if (!/^https?:\/\//i.test(url)) {
+    alert('Link harus diawali http:// atau https://');
+    return;
+  }
+
+  data.items.push({id: String(Date.now()), song, name, url, type});
+  persist();
+  clearForm();
+  alert('FX berhasil ditambahkan!');
+}
+
+function clearForm() {
+  ['songInput', 'fxNameInput', 'fxUrlInput'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+}
+
+function removeFx(id) {
+  if (confirm('Hapus FX ini?')) {
+    data.items = data.items.filter(item => item.id !== id);
+    persist();
+  }
+}
+
+function renderAdmin() {
+  const box = document.getElementById('adminItems');
+  if (!box) return;
+  box.innerHTML = '<h3 style="font:17px Georgia,serif;margin:20px 0 8px">Existing FX</h3>' +
+    (data.items.length
+      ? data.items.map(item => `<div class="admin-item"><span><b>${safe(item.song)}</b> · ${safe(item.name)} <small style="color:#a99ba0">(${item.type === 'favorite' ? 'Fav' : 'Collection'})</small></span><button onclick="removeFx('${safe(item.id)}')">DELETE</button></div>`).join('')
+      : '<p class="note">Belum ada FX yang ditambahkan.</p>');
+}
+
+render();
+</script>
+</body>
+</html>
